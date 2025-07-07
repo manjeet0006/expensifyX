@@ -171,12 +171,12 @@ export const WelcomeTemplate = ({ name }) => (
             </ul>
 
             <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '30px' }}>
-                Need help getting started? Visit our <a href="https://expensifyx.live/help" style={{ color: '#4f46e5', textDecoration: 'none' }}>Help Center</a>.
+                Need help getting started? Visit our <a href="https://expensifyx.site/help" style={{ color: '#4f46e5', textDecoration: 'none' }}>Help Center</a>.
             </p>
 
             <div style={{ textAlign: 'center' }}>
                 <a
-                    href="https://expensifyx.live/dashboard"
+                    href="https://expensifyx.site/dashboard"
                     style={{
                         backgroundColor: '#4f46e5',
                         color: '#ffffff',
@@ -252,13 +252,13 @@ export const EmailForRecurring = ({ transaction }) => {
                     </Section>
 
                     <Text style={{ fontSize: "14px", color: "#6b7280" }}>
-                        This recurring transaction is scheduled monthly. You can manage or cancel it from your <a href="https://expensifyx.app/dashboard" style={{ color: "#3b82f6" }}>dashboard</a>.
+                        This recurring transaction is scheduled monthly. You can manage or cancel it from your <a href="https://expensifyx.site/dashboard" style={{ color: "#3b82f6" }}>dashboard</a>.
                     </Text>
 
                     <Hr style={{ marginTop: "24px", marginBottom: "12px" }} />
 
                     <Text style={{ fontSize: "12px", color: "#9ca3af" }}>
-                        If you didn&apos;t set this up, please <a href="https://expensifyx.app/support" style={{ color: "#3b82f6" }}>contact support</a> immediately.
+                        If you didn&apos;t set this up, please <a href="https://expensifyx.site/support" style={{ color: "#3b82f6" }}>contact support</a> immediately.
                     </Text>
                 </Container>
             </Body>
