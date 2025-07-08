@@ -50,12 +50,12 @@ const HeroSection = () => {
                 </p>
                 <div className="flex justify-center space-x-4 ">
                     <Link href={"/dashboard"} >
-                        <Button size={"lg"} className="px-8" >
+                        <Button size={"lg"} className="px-8 cursor-pointer " >
                             Get started
                         </Button>
                     </Link>
                     <Link href={"/"} >
-                        <Button size={"lg"} variant={'outline'} className="px-8" >
+                        <Button size={"lg"} variant={'outline'} className="px-8  cursor-pointer " >
                             Home Page
                         </Button>
                     </Link>

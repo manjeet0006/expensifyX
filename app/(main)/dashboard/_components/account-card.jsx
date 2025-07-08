@@ -124,6 +124,7 @@ const AccountCard = ({ account }) => {
                                     transition={{ duration: 0.5 }}
                                 >
                                     <Switch
+                                        className={"cursor-pointer "}
                                         checked={isDefault}
                                         onClick={handleDefaultChange}
                                         disabled={updateDefaultLoading}
@@ -145,7 +146,7 @@ const AccountCard = ({ account }) => {
                                                 setIsDeleteDialogOpen(true);
 
                                             }}
-                                            className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                                            className="text-red-500 hover:text-red-700 cursor-pointer disabled:opacity-50"
                                             disabled={deleteLoading}
                                         >
                                             <TrashIcon className={`h-5 w-5 ${deleteLoading ? 'opacity-50 animate-pulse' : ''}`} />

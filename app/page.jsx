@@ -104,7 +104,7 @@ export default function Home() {
             <Link href={"/dashboard"}>
               <Button
                 size={"lg"}
-                className="bg-white text-blue-600 hover:bg-blue-50 animate-bounce px-7 "
+                className="bg-white text-blue-600 hover:bg-blue-50 cursor-pointer animate-bounce px-7 "
               >
                 Start Free Trial
               </Button>

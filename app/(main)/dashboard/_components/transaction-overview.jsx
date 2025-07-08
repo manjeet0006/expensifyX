@@ -85,12 +85,12 @@ const DashboardOveriew = ({ accounts, transactions }) => {
                         value={selectedAccountId}
                         onValueChange={setSelectedAccountId}
                     >
-                        <SelectTrigger className="w-[150px]">
+                        <SelectTrigger className="w-[150px] cursor-pointer ">
                             <SelectValue placeholder="Select account" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className={"cursor-pointer"} >
                             {accounts.map((account) => (
-                                <SelectItem key={account.id} value={account.id}>
+                                <SelectItem className={"cursor-pointer"} key={account.id} value={account.id}>
                                     {account.name}
                                 </SelectItem>
                             ))}
@@ -152,7 +152,7 @@ const DashboardOveriew = ({ accounts, transactions }) => {
                             No expenses this month
                         </p>
                     ) : (
-                        <div className="h-[300px]">
+                        <div className="h-[300px] ">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie

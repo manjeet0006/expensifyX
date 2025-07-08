@@ -218,32 +218,31 @@ const TransactionTable = ({ transactions }) => {
 
         <div className='flex gap-2' >
           <Select value={typeFilter} onValueChange={setTypeFilter} >
-            <SelectTrigger >
+            <SelectTrigger className={"cursor-pointer"} >
               <SelectValue placeholder="All Types" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="INCOME">Income</SelectItem>
-              <SelectItem value="EXPENSE">Expense</SelectItem>
+            <SelectContent className={"cursor-pointer"} >
+              <SelectItem className={"cursor-pointer"} value="INCOME">Income</SelectItem>
+              <SelectItem className={"cursor-pointer"} value="EXPENSE">Expense</SelectItem>
 
             </SelectContent>
           </Select>
 
           <Select value={recurringFilter} onValueChange={(value) => setRecurringFilter(value)} >
-            <SelectTrigger className='w-[155px] '>
+            <SelectTrigger className='w-[155px] cursor-pointer '>
               <SelectValue placeholder="All Transactions" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recurring">Recurring Only</SelectItem>
-              <SelectItem value="non-recurring">Non-Recurring Only</SelectItem>
-
+            <SelectContent className={"cursor-pointer"}>
+              <SelectItem className={"cursor-pointer"} value="recurring">Recurring Only</SelectItem>
+              <SelectItem className={"cursor-pointer"} value="non-recurring">Non-Recurring Only</SelectItem>
             </SelectContent>
           </Select>
 
           {selectedIds.length > 0 && <div className='flex items-center gap-2'>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant={'destructive'} size="sm" >
-                  <TrashIcon className='w-4 h-4 mr-1' />
+                <Button variant={'destructive'} className={"cursor-pointer"} size="sm" >
+                  <TrashIcon className='w-4 h-4 mr-1 cursor-pointer' />
                   Delete Selected ({selectedIds.length})
                 </Button>
               </AlertDialogTrigger>
@@ -255,8 +254,8 @@ const TransactionTable = ({ transactions }) => {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setSelectedIds([])} >Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleBulkDelete} >Continue</AlertDialogAction>
+                  <AlertDialogCancel className={"cursor-pointer"} onClick={() => setSelectedIds([])} >Cancel</AlertDialogCancel>
+                  <AlertDialogAction className={"cursor-pointer"} onClick={handleBulkDelete} >Continue</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -270,8 +269,9 @@ const TransactionTable = ({ transactions }) => {
                 size={'icon'}
                 onClick={handleClearFilter}
                 title='Clear Filter'
+                className={"cursor-pointer"}
               >
-                <X className='h-4 w-4' />
+                <X className='h-4 w-4 cursor-pointer' />
               </Button>
             )}
 
@@ -286,8 +286,9 @@ const TransactionTable = ({ transactions }) => {
         <Table className="min-w-full" >
           <TableHeader >
             <TableRow className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-              <TableHead className="w-[50px] bg-gray-50 dark:bg-gray-800" >
+              <TableHead className="w-[50px] bg-gray-50 dark:bg-gray-800  " >
                 <Checkbox onCheckedChange={handleSelectAll}
+                className={"cursor-pointer"}
                   checked={
                     selectedIds.length ===
                     filteredAndSortedTransaction.length &&
@@ -365,8 +366,8 @@ const TransactionTable = ({ transactions }) => {
                 <TableRow key={transaction.id}>
 
                   {/* CheckBox */}
-                  <TableCell>
-                    <Checkbox onCheckedChange={() => handleSelect(transaction.id)}
+                  <TableCell className={"cursor-pointer"} >
+                    <Checkbox className={"cursor-pointer"} onCheckedChange={() => handleSelect(transaction.id)}
                       checked={selectedIds.includes(transaction.id)}
                     />
                   </TableCell>
@@ -410,7 +411,7 @@ const TransactionTable = ({ transactions }) => {
                       ? (
                         <Tooltip>
                           <TooltipTrigger>
-                            <Badge variant={'default'} className='gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200' >
+                            <Badge variant={'default'} className='gap-1 cursor-pointer bg-purple-100 text-purple-700 hover:bg-purple-200' >
                               <RefreshCcw className='h-3 w-3' />
                               {transaction.recurringInterval ? RECURRING_INTERVALS[transaction.recurringInterval] : "Unknown"}
                             </Badge>
@@ -437,13 +438,13 @@ const TransactionTable = ({ transactions }) => {
                   <TableCell>
                     <DropdownMenu >
                       <DropdownMenuTrigger asChild >
-                        <Button variant='ghost' className='h-8 w-8 p-0' >
+                        <Button variant='ghost' className='h-8 w-8 p-0 cursor-pointer ' >
                           <MoreHorizontal className='h-4 w-4' />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent>
+                      <DropdownMenuContent className={"cursor-pointer"} >
 
-                        <DropdownMenuItem
+                        <DropdownMenuItem className={"cursor-pointer"}
                           onClick={() =>
                             router.push(
                               `/transaction/create?edit=${transaction.id}`

@@ -184,12 +184,12 @@ const AddTransactionForm = ({
         // onValueChange={(value) => setValue("type", value)}
         // defaultValues={{ type }}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full cursor-pointer ">
             <SelectValue placeholder={"Select type"} />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="EXPENSE">Expense</SelectItem>
-            <SelectItem value="INCOME">Income</SelectItem>
+          <SelectContent className={"cursor-pointer"} >
+            <SelectItem className={"cursor-pointer"} value="EXPENSE">Expense</SelectItem>
+            <SelectItem className={"cursor-pointer"} value="INCOME">Income</SelectItem>
           </SelectContent>
         </Select>
 
@@ -210,7 +210,7 @@ const AddTransactionForm = ({
               step="0.01"
               min="0"
               placeholder="0.00"
-              className="pl-7"
+              className="pl-7 cursor-pointer "
               {...register("amount")}
             />
           </div>
@@ -228,14 +228,14 @@ const AddTransactionForm = ({
             value={accountId}
           // defaultValues={getValues("accountId")}
           >
-            <SelectTrigger className='w-full' >
+            <SelectTrigger className='w-full cursor-pointer' >
               <SelectValue placeholder="Select account" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={"cursor-pointer"} >
               {accounts.length > 0 ?
                 (
                   accounts.map((account) => (
-                    <SelectItem key={account.id} value={account.id} >
+                    <SelectItem className={"cursor-pointer"} key={account.id} value={account.id} >
                       {account.name} ({formatINR(Number(account.balance))})
 
                     </SelectItem>
@@ -245,7 +245,7 @@ const AddTransactionForm = ({
               <CreateAccountDrawer asChild>
                 <Button
                   variant={'ghost'}
-                  className='w-full select-none items-center text-sm outline-none'
+                  className='w-full select-none items-center text-sm cursor-pointer outline-none'
                 >
                   Create Account
                 </Button>
@@ -268,12 +268,12 @@ const AddTransactionForm = ({
           value={categoryValue}
         // defaultValues={getValues("category")}
         >
-          <SelectTrigger className='w-full' >
+          <SelectTrigger className='w-full cursor-pointer' >
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={"cursor-pointer"} >
             {filteredCategories.map((category) => (
-              <SelectItem key={category.id} value={category.id} >
+              <SelectItem className={"cursor-pointer"} key={category.id} value={category.id} >
                 {category.name}
               </SelectItem>
             ))}
@@ -290,7 +290,7 @@ const AddTransactionForm = ({
         <Popover>
           <PopoverTrigger asChild >
             <Button id='date' variant={'outline'}
-              className=' w-full  pl-3 text-left font-normal '
+              className=' w-full  pl-3 text-left cursor-pointer font-normal '
             >
               {date ? format(date, "PPP") : <span>Pick a date</span>}
               <CalendarIcon className='w-4 h-4 ml-auto opacity-50 ' />
@@ -318,7 +318,7 @@ const AddTransactionForm = ({
 
       <div>
         <label htmlFor='description' className='text-sm font-medium ' >Description</label>
-        <Input id='description' placeholder='Enter description' {...register("description")} />
+        <Input className={"cursor-pointer"} id='description' placeholder='Enter description' {...register("description")} />
         {errors.description && (
           <p className='text-sm text-red-500  '>{errors.description.message}</p>
         )}
@@ -332,6 +332,7 @@ const AddTransactionForm = ({
           <p className='text-sm text-muted-foreground ' >Set up a recurring schedule for this transaction</p>
         </div>
         <Switch id='recurring'
+          className={"cursor-pointer"}
           checked={isRecurring}
           onCheckedChange={(checked) => setValue("isRecurring", checked)}
         />
@@ -343,21 +344,21 @@ const AddTransactionForm = ({
           <Select
             onValueChange={(value) =>
               setValue(
-                "recurringInterval",
+                "recurringInterval", value
               )
             }
             // onValueChange={(value) => setValue("recurringInterval", value)}
             // defaultValues={getValues("recurringInterval")}
             value={watch("recurringInterval") || ""}
           >
-            <SelectTrigger className='w-full' >
+            <SelectTrigger className='w-full cursor-pointer ' >
               <SelectValue placeholder="Select Interval" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='DAILY' >Daily</SelectItem>
-              <SelectItem value='WEEKLY' >Weekly</SelectItem>
-              <SelectItem value='MONTHLY' >Monthly</SelectItem>
-              <SelectItem value='YEARLY' >Yearly</SelectItem>
+            <SelectContent className={"cursor-pointer"} >
+              <SelectItem className={"cursor-pointer"} value='DAILY' >Daily</SelectItem>
+              <SelectItem className={"cursor-pointer"} value='WEEKLY' >Weekly</SelectItem>
+              <SelectItem className={"cursor-pointer"} value='MONTHLY' >Monthly</SelectItem>
+              <SelectItem className={"cursor-pointer"} value='YEARLY' >Yearly</SelectItem>
             </SelectContent>
           </Select>
 
@@ -372,7 +373,7 @@ const AddTransactionForm = ({
         <Button
           type='button'
           variant={'outline'}
-          className='flex-1'
+          className='flex-1 cursor-pointer '
           onClick={() => router.back()}
         >
           Cancel
@@ -380,7 +381,7 @@ const AddTransactionForm = ({
         <Button
           type='submit'
           disabled={transactionLoading}
-          className='flex-1'
+          className='flex-1 cursor-pointer '
         >
           {transactionLoading ?
             <>
