@@ -4,13 +4,8 @@ import React from 'react'
 const Page = () => {
   return (
     <div >
-      <SignIn
-        path="/sign-in"
-        routing="path"
-        signUpUrl="/sign-up"
-        redirectUrl="/dashboard"
-      />
-
+      <SignIn/>
+      
     </div>
   )
 }
