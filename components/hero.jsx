@@ -44,7 +44,7 @@ const HeroSection = () => {
                 <h1 className="text-5xl md:text-8xl lg:text-[105px] gradient-text">
                     Manage Your Finances <br /> with ExpensfiyX
                 </h1>
-                <p className="text-xl text-gray-500 mb-8 pt-4 max-w-2xl mx-auto ">
+                <p className=" text-sm md:text-xl text-gray-500 mb-8 pt-4 max-w-2xl mx-auto ">
                     An Ai-powered financial management platfrom that helps you track,
                     analyze, and optimize your spending with real-time insights.
                 </p>
@@ -66,7 +66,7 @@ const HeroSection = () => {
                         ref={imageRef}
                     >
                         <Image
-                            src={"/banner.jpeg"}
+                            src={"/bannerf.png"}
                             alt="banner"
                             width={1280}
                             height={720}

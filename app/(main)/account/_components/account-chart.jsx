@@ -18,7 +18,7 @@ const DATE_RANGES= {
 
 const AccountChart = ({transactions}) => {
 
-    const [dateRange, setDateRange] = useState("1M");
+    const [dateRange, setDateRange] = useState("7D");
 
     const filterData = useMemo(() => {
         const range = DATE_RANGES[dateRange];
@@ -89,7 +89,7 @@ const AccountChart = ({transactions}) => {
 
             </CardHeader>
             <CardContent>
-                <div className='flex justify-around mb-6 text-sm' >
+                <div className='grid md:grid-cols-3 justify-around gap-4 mb-2 text-xs' >
                     <div className='text-center' >
                         <p className='text-muted-foreground' >Total Income</p>
                         <p className='text-lg font-bold text-green-500' > {formatINR(totals.income)} </p>

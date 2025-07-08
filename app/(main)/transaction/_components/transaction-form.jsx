@@ -15,7 +15,7 @@ import { format } from 'date-fns'
 
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ReciptScanner from './recipt-scanner'
 import { toast } from 'sonner'
@@ -28,6 +28,8 @@ const AddTransactionForm = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [waitingToRedirect, setWaitingToRedirect] = useState(false);
+
 
 
   const editId = searchParams.get("edit")
@@ -96,13 +98,30 @@ const AddTransactionForm = ({
 
   }
 
+  // useEffect(() => {
+  //   if (transactionResult?.success && !transactionLoading && transactionResult.data.accountId) {
+  //     toast.success(editMode ? "Transaction Updated successfully" : "Transaction Created successfully");
+  //     reset();
+  //     router.push(`/account/${transactionResult.data.accountId}`)
+  //   }
+  // }, [transactionResult, transactionLoading, editMode, reset])
+
   useEffect(() => {
-    if (transactionResult?.success && !transactionLoading && transactionResult.data.accountId) {
-      toast.success(editMode ? "Transaction Updated successfully" : "Transaction Created successfully");
-      reset();
-      router.push(`/account/${transactionResult.data.accountId}`)
+    if (transactionResult?.success && !transactionLoading && transactionResult.data?.accountId) {
+      toast.success(editMode ? "Transaction updated successfully!" : "Transaction created successfully!");
+
+      setWaitingToRedirect(true); // Start waiting
+
+      // Wait 2.5s, then redirect
+      const timeout = setTimeout(() => {
+        reset();
+        router.push(`/account/${transactionResult.data.accountId}`);
+      }, 2500);
+
+      return () => clearTimeout(timeout);
     }
-  }, [transactionResult, transactionLoading, editMode, reset])
+  }, [transactionResult, transactionLoading, editMode, reset, router]);
+
 
 
 
@@ -127,7 +146,7 @@ const AddTransactionForm = ({
       if (scanData.category && typeof scanData.category === 'string') {
         // Normalize both for comparison
         const scannedCategory = category.find(
-          (cat) => cat.id.toLowerCase().trim() === scanData.category.toLowerCase().trim()
+          (cat) => cat.name.toLowerCase().trim() === scanData.category.toLowerCase().trim()
         );
         if (scannedCategory) {
           setValue("type", scannedCategory.type);
@@ -162,8 +181,8 @@ const AddTransactionForm = ({
             setValue("type", value);
             setValue("category", "");
           }}
-          // onValueChange={(value) => setValue("type", value)}
-          // defaultValues={{ type }}
+        // onValueChange={(value) => setValue("type", value)}
+        // defaultValues={{ type }}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder={"Select type"} />
@@ -207,7 +226,7 @@ const AddTransactionForm = ({
           <Select
             onValueChange={(value) => setValue("accountId", value)}
             value={accountId}
-            // defaultValues={getValues("accountId")}
+          // defaultValues={getValues("accountId")}
           >
             <SelectTrigger className='w-full' >
               <SelectValue placeholder="Select account" />
@@ -247,7 +266,7 @@ const AddTransactionForm = ({
         <Select
           onValueChange={(value) => setValue("category", value)}
           value={categoryValue}
-          // defaultValues={getValues("category")}
+        // defaultValues={getValues("category")}
         >
           <SelectTrigger className='w-full' >
             <SelectValue placeholder="Select category" />
@@ -329,7 +348,7 @@ const AddTransactionForm = ({
             }
             // onValueChange={(value) => setValue("recurringInterval", value)}
             // defaultValues={getValues("recurringInterval")}
-          value={watch("recurringInterval") || ""}
+            value={watch("recurringInterval") || ""}
           >
             <SelectTrigger className='w-full' >
               <SelectValue placeholder="Select Interval" />
@@ -377,207 +396,18 @@ const AddTransactionForm = ({
         </Button>
       </div>
 
+      {waitingToRedirect && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+          <Loader2 className="w-8 h-8 mb-2 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">
+            Redirecting to your account...
+          </p>
+        </div>
+      )}
+
+
     </form>
 
-    // <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-    //   {/* Receipt Scanner - Only show in create mode */}
-    //   {!editMode && <ReciptScanner onScanComplete={handleScanComplete} />}
-
-    //   {/* Type */}
-    //   <div className="space-y-2">
-    //     <label className="text-sm font-medium">Type</label>
-    //     <Select
-    //       onValueChange={(value) => setValue("type", value)}
-    //       defaultValue={type}
-    //     >
-    //       <SelectTrigger>
-    //         <SelectValue placeholder="Select type" />
-    //       </SelectTrigger>
-    //       <SelectContent>
-    //         <SelectItem value="EXPENSE">Expense</SelectItem>
-    //         <SelectItem value="INCOME">Income</SelectItem>
-    //       </SelectContent>
-    //     </Select>
-    //     {errors.type && (
-    //       <p className="text-sm text-red-500">{errors.type.message}</p>
-    //     )}
-    //   </div>
-
-    //   {/* Amount and Account */}
-    //   <div className="grid gap-6 md:grid-cols-2">
-    //     <div className="space-y-2">
-    //       <label className="text-sm font-medium">Amount</label>
-    //       <Input
-    //         type="number"
-    //         step="0.01"
-    //         placeholder="0.00"
-    //         {...register("amount")}
-    //       />
-    //       {errors.amount && (
-    //         <p className="text-sm text-red-500">{errors.amount.message}</p>
-    //       )}
-    //     </div>
-
-    //     <div className="space-y-2">
-    //       <label className="text-sm font-medium">Account</label>
-    //       <Select
-    //         onValueChange={(value) => setValue("accountId", value)}
-    //         defaultValue={getValues("accountId")}
-    //       >
-    //         <SelectTrigger>
-    //           <SelectValue placeholder="Select account" />
-    //         </SelectTrigger>
-    //         <SelectContent>
-    //           {accounts.map((account) => (
-    //             <SelectItem key={account.id} value={account.id}>
-    //               {account.name} (${parseFloat(account.balance).toFixed(2)})
-    //             </SelectItem>
-    //           ))}
-    //           <CreateAccountDrawer>
-    //             <Button
-    //               variant="ghost"
-    //               className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-    //             >
-    //               Create Account
-    //             </Button>
-    //           </CreateAccountDrawer>
-    //         </SelectContent>
-    //       </Select>
-    //       {errors.accountId && (
-    //         <p className="text-sm text-red-500">{errors.accountId.message}</p>
-    //       )}
-    //     </div>
-    //   </div>
-
-    //   {/* Category */}
-    //   <div className="space-y-2">
-    //     <label className="text-sm font-medium">Category</label>
-    //     <Select
-    //       onValueChange={(value) => setValue("category", value)}
-    //       defaultValue={getValues("category")}
-    //     >
-    //       <SelectTrigger>
-    //         <SelectValue placeholder="Select category" />
-    //       </SelectTrigger>
-    //       <SelectContent>
-    //         {filteredCategories.map((category) => (
-    //           <SelectItem key={category.id} value={category.id}>
-    //             {category.name}
-    //           </SelectItem>
-    //         ))}
-    //       </SelectContent>
-    //     </Select>
-    //     {errors.category && (
-    //       <p className="text-sm text-red-500">{errors.category.message}</p>
-    //     )}
-    //   </div>
-
-    //   {/* Date */}
-    //   <div className="space-y-2">
-    //     <label className="text-sm font-medium">Date</label>
-    //     <Popover>
-    //       <PopoverTrigger asChild>
-    //         <Button
-    //           variant="outline"
-    //           className={cn(
-    //             "w-full pl-3 text-left font-normal",
-    //             !date && "text-muted-foreground"
-    //           )}
-    //         >
-    //           {date ? format(date, "PPP") : <span>Pick a date</span>}
-    //           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-    //         </Button>
-    //       </PopoverTrigger>
-    //       <PopoverContent className="w-auto p-0" align="start">
-    //         <Calendar
-    //           mode="single"
-    //           selected={date}
-    //           onSelect={(date) => setValue("date", date)}
-    //           disabled={(date) =>
-    //             date > new Date() || date < new Date("1900-01-01")
-    //           }
-    //           initialFocus
-    //         />
-    //       </PopoverContent>
-    //     </Popover>
-    //     {errors.date && (
-    //       <p className="text-sm text-red-500">{errors.date.message}</p>
-    //     )}
-    //   </div>
-
-    //   {/* Description */}
-    //   <div className="space-y-2">
-    //     <label className="text-sm font-medium">Description</label>
-    //     <Input placeholder="Enter description" {...register("description")} />
-    //     {errors.description && (
-    //       <p className="text-sm text-red-500">{errors.description.message}</p>
-    //     )}
-    //   </div>
-
-    //   {/* Recurring Toggle */}
-    //   <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-    //     <div className="space-y-0.5">
-    //       <label className="text-base font-medium">Recurring Transaction</label>
-    //       <div className="text-sm text-muted-foreground">
-    //         Set up a recurring schedule for this transaction
-    //       </div>
-    //     </div>
-    //     <Switch
-    //       checked={isRecurring}
-    //       onCheckedChange={(checked) => setValue("isRecurring", checked)}
-    //     />
-    //   </div>
-
-    //   {/* Recurring Interval */}
-    //   {isRecurring && (
-    //     <div className="space-y-2">
-    //       <label className="text-sm font-medium">Recurring Interval</label>
-    //       <Select
-    //         onValueChange={(value) => setValue("recurringInterval", value)}
-    //         defaultValue={getValues("recurringInterval")}
-    //       >
-    //         <SelectTrigger>
-    //           <SelectValue placeholder="Select interval" />
-    //         </SelectTrigger>
-    //         <SelectContent>
-    //           <SelectItem value="DAILY">Daily</SelectItem>
-    //           <SelectItem value="WEEKLY">Weekly</SelectItem>
-    //           <SelectItem value="MONTHLY">Monthly</SelectItem>
-    //           <SelectItem value="YEARLY">Yearly</SelectItem>
-    //         </SelectContent>
-    //       </Select>
-    //       {errors.recurringInterval && (
-    //         <p className="text-sm text-red-500">
-    //           {errors.recurringInterval.message}
-    //         </p>
-    //       )}
-    //     </div>
-    //   )}
-
-    //   {/* Actions */}
-    //   <div className="flex gap-4">
-    //     <Button
-    //       type="button"
-    //       variant="outline"
-    //       className="w-full"
-    //       onClick={() => router.back()}
-    //     >
-    //       Cancel
-    //     </Button>
-    //     <Button type="submit" className="w-full" disabled={transactionLoading}>
-    //       {transactionLoading ? (
-    //         <>
-    //           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-    //           {editMode ? "Updating..." : "Creating..."}
-    //         </>
-    //       ) : editMode ? (
-    //         "Update Transaction"
-    //       ) : (
-    //         "Create Transaction"
-    //       )}
-    //     </Button>
-    //   </div>
-    // </form>
 
 
   )

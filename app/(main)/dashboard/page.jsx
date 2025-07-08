@@ -22,7 +22,7 @@ async function DashboardPage() {
   // Fetch budget data only if a default account exists. This depends on the accounts fetch.
   let budgetData = null;
   if (defaultAccount) {
-    budgetData = await getCurrentBudget(defaultAccount.id);
+    budgetData = await getCurrentBudget();
   }
 
   return (
