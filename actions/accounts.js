@@ -181,3 +181,40 @@ export async function bulkDeleteTransactions(transactionIds) {
     }
 
 }
+
+
+export async function deleteUserAccount(accountId) {
+
+    try {
+        const { userId } = await auth()
+        if (!userId) throw new Error("Unauthorized")
+
+        const user = await db.user.findUnique({
+            where: { clerkUserId: userId }
+        })
+
+        if (!user) throw new Error("User not Found")
+
+
+        const deleted = await db.account.deleteMany({
+            where: {
+                id: accountId,
+                userId: user.id,
+            }
+        })
+
+        if (deleted.count === 0) {
+            throw new Error("Account not found or unauthorized")
+        }
+
+        revalidatePath("/dashboard")
+        return { success: true }
+
+
+    } catch (error) {
+        console.error("Delete account error:", error)
+        throw new Error(error.message || "Failed to delete account")
+
+    }
+
+}

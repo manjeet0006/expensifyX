@@ -19,8 +19,13 @@ const ReciptScanner = ({ onScanComplete }) => {
 
     const handleReceiptScan = async (file) => {
         if (file.size > 10 * 1024 * 1024) {
-            toast.error("File size should be less than 5MB")
+            const sizeInMB = (file.size / 1024 / 1024).toFixed(2);
+            toast.error(`File is ${sizeInMB}MB. Max allowed size is 10MB.`);
             return
+        }
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please upload a valid image");
+            return;
         }
 
         await scanReceiptFn(file)
@@ -32,7 +37,7 @@ const ReciptScanner = ({ onScanComplete }) => {
             onScanComplete(scannedData);
             toast.success("Receipt scanned successfully")
         }
-    }, [scanReceiptLoading, scannedData ]) 
+    }, [scanReceiptLoading, scannedData])
 
 
     return (
@@ -40,12 +45,11 @@ const ReciptScanner = ({ onScanComplete }) => {
             <input
                 type="file"
                 ref={fileInputRef}
-                className='hidden'
+                className="hidden"
                 accept="image/*"
-                capture="environment"
                 onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) handleReceiptScan(file)
+                    if (file) handleReceiptScan(file);
                 }}
             />
 
