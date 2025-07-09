@@ -14,9 +14,9 @@ const nextConfig = {
         serverActions:{
             bodySizeLimit: "10mb", // Set the body size limit for server actions
         },
-        serverComponentsExternalPackages: ['pdfkit', 'exceljs'],
     },
 
+    serverExternalPackages: ['pdfkit', 'exceljs'],
 };
 
 export default nextConfig;

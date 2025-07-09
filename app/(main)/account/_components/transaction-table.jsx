@@ -43,7 +43,7 @@ const TransactionTable = ({ transactions, accountData }) => {
   })
 
   const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [endDate, setEndDate] = useState(new Date())
 
 
   const handleExport = async (format) => {
@@ -134,7 +134,6 @@ const TransactionTable = ({ transactions, accountData }) => {
       toast.error("Transaction deleted successfully");
     }
   }, [deleteLoading, deleteData])
-
 
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("")
@@ -326,78 +325,92 @@ const TransactionTable = ({ transactions, accountData }) => {
             </PopoverContent>
           </Popover> */}
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="cursor-pointer">
-                <DownloadIcon className="w-4 h-4" />
-              </Button>
-            </PopoverTrigger>
+          {/* Export */}
 
-            <PopoverContent className="w-[300px] p-4 space-y-4">
-              <div className="flex flex-col gap-3">
-                <label className="text-sm text-muted-foreground font-medium">Select Date Range</label>
+          {transactions.length > 0 &&
+            (
+              <Popover>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="cursor-pointer">
+                        <DownloadIcon className="w-4 h-4" />
+                      </Button>
+                    </PopoverTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent side="top"  >
+                    <p>Export Transactions</p>
+                  </TooltipContent>
+                </Tooltip>
 
-                {/* Start Date */}
-                <Popover>
-                  <PopoverTrigger asChild>
+                <PopoverContent className="w-[300px] p-4 space-y-4">
+                  <div className="flex flex-col gap-3">
+                    <label className="text-sm text-muted-foreground font-medium">Select Date Range</label>
+
+                    {/* Start Date */}
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn("w-full justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {startDate ? format(startDate, "PPP") : "Start Date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={startDate}
+                          onSelect={setStartDate}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    {/* End Date */}
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn("w-full justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {endDate ? format(endDate, "PPP") : "End Date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={endDate || new Date()}
+                          onSelect={setEndDate}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
                     <Button
-                      variant="outline"
-                      className={cn("w-full justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                      disabled={isExporting || !startDate || !endDate}
+                      onClick={() => handleExport('pdf')}
+                      className="bg-blue-600 hover:bg-blue-700 transition text-white rounded text-sm"
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate ? format(startDate, "PPP") : "Start Date"}
+                      {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download PDF"}
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={startDate}
-                      onSelect={setStartDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                {/* End Date */}
-                <Popover>
-                  <PopoverTrigger asChild>
                     <Button
-                      variant="outline"
-                      className={cn("w-full justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                      disabled={isExporting || !startDate || !endDate}
+                      onClick={() => handleExport('excel')}
+                      className="bg-green-600 hover:bg-green-700 transition text-white rounded text-sm"
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {endDate ? format(endDate, "PPP") : "End Date"}
+                      {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download Excel"}
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={endDate}
-                      onSelect={setEndDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
 
-              <div className="flex flex-col gap-2">
-                <Button
-                  disabled={isExporting || !startDate || !endDate}
-                  onClick={() => handleExport('pdf')}
-                  className="bg-blue-600 hover:bg-blue-700 transition text-white rounded text-sm"
-                >
-                  {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download PDF"}
-                </Button>
-                <Button
-                  disabled={isExporting || !startDate || !endDate}
-                  onClick={() => handleExport('excel')}
-                  className="bg-green-600 hover:bg-green-700 transition text-white rounded text-sm"
-                >
-                  {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download Excel"}
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+            )}
+
 
           {selectedIds.length > 0 && <div className='flex items-center gap-2'>
             <AlertDialog>
@@ -665,6 +678,8 @@ const TransactionTable = ({ transactions, accountData }) => {
           <span className="text-lg"><ArrowRight className='h-4 w-4 text-muted-foreground' /></span>
           </button>
           </div> */}
+
+          
       {/* </div> */}
 
     </div>
