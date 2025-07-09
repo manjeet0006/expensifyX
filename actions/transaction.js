@@ -192,7 +192,7 @@ export async function scanReceipt(file) {
                 throw new Error("Could not extract valid receipt data from the image.");
             }
 
-            // console.log(data);
+
 
             return {
                 amount: parseFloat(data.amount),

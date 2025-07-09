@@ -42,7 +42,7 @@ const AccountPage = async ({ params }) => {
         {/* Transaction Tavle */}
 
         <Suspense fallback={<BarLoader className='mt-4' width={"100%"} color='#9333ea' />} >
-          <TransactionTable transactions={transactions} />
+          <TransactionTable accountData={accountData} transactions={transactions} />
 
         </Suspense>
       </div>

@@ -1,19 +1,23 @@
 "use client"
-import { bulkDeleteTransactions } from '@/actions/accounts'
+import { bulkDeleteTransactions } from '@/actions/accounts';
+import { downloadTransactions } from '@/actions/download';
 import formatINR from '@/app/lib/currency'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { categoryColors } from '@/data/catogories'
 import useFetch from '@/hooks/use-fetch'
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns'
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, Clock, MoreHorizontal, RefreshCcw, Search, TrashIcon, X } from 'lucide-react'
+import { CalendarIcon, ChevronDown, ChevronUp, Clock, DownloadIcon, Loader, MoreHorizontal, RefreshCcw, Search, TrashIcon, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarLoader } from 'react-spinners'
@@ -28,14 +32,53 @@ const RECURRING_INTERVALS = {
   YEARLY: "Yearly",
 };
 
-const TransactionTable = ({ transactions }) => {
+const TransactionTable = ({ transactions, accountData }) => {
 
+  const [isExporting, setIsExporting] = useState(false);
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState([])
   const [sortConfig, setSortConfig] = useState({
     field: "date",
     direction: "desc"
   })
+
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+
+
+  const handleExport = async (format) => {
+    if (!startDate || !endDate) {
+      toast.error('Please select a valid start and end date.');
+      return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("Start date cannot be after end date.");
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      const accountId = accountData.id
+      const result = await downloadTransactions(accountId, format, startDate, endDate);
+      // Convert base64 string back to a Blob
+      const blob = await (await fetch(`data:${result.mimeType};base64,${result.buffer}`)).blob();
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = result.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success("Your download has started.");
+    } catch (err) {
+      console.error('Export failed', err);
+      toast.error(err.message || 'Something went wrong while downloading the file.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
 
   // Handle Select All
@@ -238,6 +281,124 @@ const TransactionTable = ({ transactions }) => {
             </SelectContent>
           </Select>
 
+          {/* <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="cursor-pointer">
+                <DownloadIcon className="w-4 h-4" />
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-[280px] p-4 space-y-4">
+              <div className="flex flex-col gap-3">
+                <label className="text-sm text-gray-600 font-medium">Select Date Range</label>
+                <div className="flex flex-col gap-2">
+                  <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 text-sm"
+                  />
+                  <Input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Button
+                  disabled={isExporting}
+                  onClick={() => handleExport('pdf')}
+                  className="bg-blue-600 hover:bg-blue-700 transition px-4 py-2 text-white rounded text-sm"
+                >
+                  {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download PDF"}
+                </Button>
+                <Button
+                  disabled={isExporting}
+                  onClick={() => handleExport('excel')}
+                  className="bg-green-600 hover:bg-green-700 transition px-4 py-2 text-white rounded text-sm"
+                >
+                  {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download Excel"}
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover> */}
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="cursor-pointer">
+                <DownloadIcon className="w-4 h-4" />
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-[300px] p-4 space-y-4">
+              <div className="flex flex-col gap-3">
+                <label className="text-sm text-muted-foreground font-medium">Select Date Range</label>
+
+                {/* Start Date */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn("w-full justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {startDate ? format(startDate, "PPP") : "Start Date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                {/* End Date */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn("w-full justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {endDate ? format(endDate, "PPP") : "End Date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={setEndDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Button
+                  disabled={isExporting || !startDate || !endDate}
+                  onClick={() => handleExport('pdf')}
+                  className="bg-blue-600 hover:bg-blue-700 transition text-white rounded text-sm"
+                >
+                  {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download PDF"}
+                </Button>
+                <Button
+                  disabled={isExporting || !startDate || !endDate}
+                  onClick={() => handleExport('excel')}
+                  className="bg-green-600 hover:bg-green-700 transition text-white rounded text-sm"
+                >
+                  {isExporting ? <Loader className="w-4 h-4 animate-spin" /> : "Download Excel"}
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+
           {selectedIds.length > 0 && <div className='flex items-center gap-2'>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -288,7 +449,7 @@ const TransactionTable = ({ transactions }) => {
             <TableRow className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
               <TableHead className="w-[50px] bg-gray-50 dark:bg-gray-800  " >
                 <Checkbox onCheckedChange={handleSelectAll}
-                className={"cursor-pointer"}
+                  className={"cursor-pointer"}
                   checked={
                     selectedIds.length ===
                     filteredAndSortedTransaction.length &&
