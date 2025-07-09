@@ -137,7 +137,7 @@ export const WelcomeTemplate = ({ name }) => (
         style={{
             fontFamily: 'Arial, sans-serif',
             backgroundColor: '#f4f4f5',
-            padding: '40px',
+            padding: '40px 16px',
             color: '#111827',
         }}
     >
