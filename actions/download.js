@@ -39,7 +39,7 @@ export const generatePdfTable = async (doc, transactions) => {
     title: "Transaction Report",
     subtitle: `Total Transactions: ${transactions.length}`,
     headers: [
-      "Description", "Amount", "Date", "Type", "Account", "Category", "Recurring", "Interval", "Next Date", "Created", "Updated"
+      "Description", "Amount", "Date", "Type", "Account", "Category", "Recurring", "RecurringInterval", "Next Date", "Created", "Updated"
     ],
     rows: transactions.map(tx => ([
       tx.description,

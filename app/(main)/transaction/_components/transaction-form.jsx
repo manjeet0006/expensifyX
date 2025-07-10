@@ -13,9 +13,9 @@ import useFetch from '@/hooks/use-fetch'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 
-import { CalendarIcon, Loader2 } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import ReciptScanner from './recipt-scanner'
 import { toast } from 'sonner'
@@ -28,9 +28,6 @@ const AddTransactionForm = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [waitingToRedirect, setWaitingToRedirect] = useState(false);
-
-
 
   const editId = searchParams.get("edit")
 
@@ -108,17 +105,9 @@ const AddTransactionForm = ({
 
   useEffect(() => {
     if (transactionResult?.success && !transactionLoading && transactionResult.data?.accountId) {
-      toast.success(editMode ? "Transaction updated successfully!" : "Transaction created successfully!");
-
-      setWaitingToRedirect(true); // Start waiting
-
-      // Wait 2.5s, then redirect
-      const timeout = setTimeout(() => {
-        reset();
-        router.push(`/account/${transactionResult.data.accountId}`);
-      }, 2500);
-
-      return () => clearTimeout(timeout);
+      toast.success(editMode ? "Transaction updated successfully!" : "Transaction created successfully!")
+      reset()
+      router.push(`/account/${transactionResult.data.accountId}`)
     }
   }, [transactionResult, transactionLoading, editMode, reset, router]);
 
@@ -163,9 +152,9 @@ const AddTransactionForm = ({
 
 
 
-  const filteredCategories = category.filter(
+  const filteredCategories = useMemo(() => category.filter(
     (category) => category.type === type
-  )
+  ), [category, type])
 
   return (
     <form className='space-y-7 ' onSubmit={handleSubmit(onSubmit)} >
@@ -396,17 +385,6 @@ const AddTransactionForm = ({
               )}
         </Button>
       </div>
-
-      {waitingToRedirect && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-          <Loader2 className="w-8 h-8 mb-2 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">
-            Redirecting to your account...
-          </p>
-        </div>
-      )}
-
-
     </form>
 
 
