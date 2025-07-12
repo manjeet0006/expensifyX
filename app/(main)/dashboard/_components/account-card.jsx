@@ -1,7 +1,7 @@
 "use client"
 import { deleteUserAccount, updateDefaultAccount } from '@/actions/accounts'
 import formatINR from '@/app/lib/currency'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {  Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import useFetch from '@/hooks/use-fetch'
 

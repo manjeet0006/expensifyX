@@ -25,6 +25,8 @@ async function DashboardPage() {
     budgetData = await getCurrentBudget();
   }
 
+
+
   return (
     <div className="flex flex-col gap-8"  >
       {/* Budget Progress */}
