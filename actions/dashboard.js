@@ -130,26 +130,45 @@ export async function createAccount(data) {
 
 
 export async function getDashboardFullData() {
-  const user = await getCurrentUser();
+    const user = await getCurrentUser();
 
-  const [accounts, transactions] = await Promise.all([
-    db.account.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      include: {
-        _count: { select: { transactions: true } }
-      }
-    }),
-    db.transaction.findMany({
-      where: { userId: user.id },
-      orderBy: { date: "desc" },
-      take: 10 
-    })
-  ]);
+    const [accounts, transactions] = await Promise.all([
+        db.account.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: "desc" },
+            select: {
+                id: true,
+                name: true,
+                balance: true,
+                type: true,
+                isDefault: true,
+                _count: {
+                    select: {
+                        transactions: true,
+                    },
+                },
+            },
+        }),
 
-  return {
-    accounts: accounts.map(serializeTransaction),
-    transactions: transactions.map(serializeTransaction)
-  }
+        db.transaction.findMany({
+            where: { userId: user.id },
+            orderBy: { date: "desc" },
+            take: 10,
+            select: {
+                id: true,
+                amount: true,
+                date: true,
+                category: true,
+                accountId: true,
+                type: true,
+            }
+        })
+
+    ]);
+
+    return {
+        accounts: accounts.map(serializeTransaction),
+        transactions: transactions.map(serializeTransaction)
+    }
 }
 
