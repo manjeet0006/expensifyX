@@ -12,12 +12,8 @@ import { getDashboardFullData } from '@/actions/dashboard'
 async function DashboardPage() {
 
   console.time("fetch-dashboard")
-const data = await getDashboardFullData()
-console.timeEnd("fetch-dashboard")
-
   const { accounts, transactions } = await getDashboardFullData();
-
-
+  console.timeEnd("fetch-dashboard")
 
   const defaultAccount = accounts?.find((account) => account.isDefault);
 

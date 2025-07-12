@@ -10,16 +10,17 @@ import { BarLoader } from 'react-spinners'
 const AddTransactionPage = async ({ searchParams }) => {
   const params = await searchParams;
 
-  const accounts = await getDashboardFullData()
-
-
   const editId = params?.edit
 
-  let initialData = null;
-  if (editId) {
-    const transaction = await getTransaction(editId)
-    initialData = transaction
-  }
+  // Fetch accounts and existing transaction data in parallel
+  const [accountData, initialData] = await Promise.all([
+    getDashboardFullData(),
+    editId ? getTransaction(editId) : Promise.resolve(null)
+  ]);
+
+  const { accounts } = accountData;
+
+
 
 
   return (
@@ -30,7 +31,7 @@ const AddTransactionPage = async ({ searchParams }) => {
       <Suspense fallback={<BarLoader className='mt-4 ' width={"100%"} color='#9333ea' />} >
 
         <AddTransactionForm
-          accounts={accounts.accounts}
+          accounts={accounts || []}
           category={defaultCategories}
           editMode={!!editId}
           initialData={initialData}

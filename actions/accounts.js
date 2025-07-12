@@ -86,14 +86,7 @@ export async function getAccountWithTransactions(accountId) {
 export async function bulkDeleteTransactions(transactionIds) {
 
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized")
-
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId }
-        })
-
-        if (!user) throw new Error("User not Found")
+        const user = await getCurrentUser();
 
         const transactions = await db.transaction.findMany({
             where: {
@@ -162,16 +155,8 @@ export async function bulkDeleteTransactions(transactionIds) {
 export async function deleteUserAccount(accountId) {
 
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized")
-
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId }
-        })
-
-        if (!user) throw new Error("User not Found")
-
-
+        const user = await getCurrentUser();
+        
         const deleted = await db.account.deleteMany({
             where: {
                 id: accountId,

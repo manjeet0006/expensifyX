@@ -22,8 +22,7 @@ function serializeAmount(obj) {
 
 export async function createTransaction(data) {
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized");
+        const user = await getCurrentUser();
 
         //Arcjet to add rate limiting
 
@@ -31,7 +30,7 @@ export async function createTransaction(data) {
         const req = await request();
         //check rate limit
         const decision = await aj.protect(req, {
-            userId,
+            userId: user.clerkUserId,
             requested: 1, //specify how many token to consume
         })
 
@@ -48,16 +47,6 @@ export async function createTransaction(data) {
             }
             throw new Error("Request Block")
 
-        }
-
-        const user = await db.user.findUnique({
-            where: {
-                clerkUserId: userId
-            }
-        })
-
-        if (!user) {
-            throw new Error("User not found");
         }
 
         const account = await db.account.findUnique({
@@ -314,5 +303,3 @@ export async function updateTransaction(id, data) {
     }
 
 }
-
-

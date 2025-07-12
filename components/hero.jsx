@@ -1,83 +1,107 @@
+
 "use client"
 
-import Link from 'next/link'
-import React, { useEffect, useRef } from 'react'
-import { Button } from './ui/button'
-import Image from 'next/image'
+import Link from "next/link"
+import Image from "next/image"
+import React, { useRef } from "react"
+import { useScroll, useTransform, motion, useMotionTemplate, useSpring } from "framer-motion"
+import { Button } from "@/components/ui/button"
 
 const HeroSection = () => {
+  const containerRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: containerRef })
+  const smoothScroll = useSpring(scrollYProgress, { damping: 40, stiffness: 400 })
 
-    const imageRef = useRef()
-    const ticking = useRef(false); 
+  const imageRotateX = useTransform(
+    smoothScroll,
+    [0, 0.02, 0.04, 0.07, 0.1],
+    [18, 10, 5, 2, 0]
+  )
 
+  const imageTranslateY = useTransform(
+  smoothScroll,
+  [0, 0.015, 0.035, 0.06, 0.1],
+  [100, 90, 60, 30, 0]
+)
 
+const imageScale = useTransform(
+  smoothScroll,
+  [0, 0.05, 0.1],
+  [0.8, 1.02, 1.1]
+)
 
-    useEffect(() => {
-        const imageElement = imageRef.current;
+  const textOpacity = useTransform(smoothScroll, [0, 0.1], [1, 0.7])
+  const blur = useTransform(smoothScroll, [0, 0.1], [0, 8])
+  const textImageScale = useTransform(smoothScroll, [0, 0.05], [0.95, 1.2])
 
-        const handleScroll = () => {
-            if (!ticking.current) {
-                window.requestAnimationFrame(() => {
-                    const scrollPosition = window.scrollY;
-                    const threshold = 100;
+  const finalBlur = useMotionTemplate`blur(${blur}px)`
 
-                    if (scrollPosition > threshold) {
-                        imageElement?.classList.add('scrolled');
-                    } else {
-                        imageElement?.classList.remove('scrolled');
-                    }
+  return (
+    <section
+      ref={containerRef}
+      className="h-[400vh] w-full flex flex-col items-center justify-start text-center py-32 px-4"
+      style={{ perspective: "1200px" }}
+    >
+      {/* Heading */}
+      <motion.h1
+        style={{ opacity: textOpacity, filter: finalBlur, scale: textImageScale }}
+        className="text-4xl md:text-6xl lg:text-7xl mt-10 font-bold tracking-tight gradient-text animate-gradient  mb-2 "
+      >
+        Manage Your Finances <br /> with ExpensifyX
+      </motion.h1>
 
-                    ticking.current = false;
-                });
+      {/* Description */}
+      <motion.p
+        style={{ opacity: textOpacity, filter: finalBlur }}
+        className="text-gray-600 text-base md:text-xl max-w-2xl mb-10 leading-relaxed"
+      >
+        An AI-powered platform to help you track, analyze, and manage your spending habits — all in one powerful dashboard.
+      </motion.p>
 
-                ticking.current = true;
-            }
-        };
+      {/* Buttons */}
+      <motion.div
+        style={{ scale: textImageScale}}
+        className="flex flex-col sm:flex-row gap-4 "
+      >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Link href="/dashboard">
+            <Button size="lg" className="px-8">
+              Get Started
+            </Button>
+          </Link>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Link href="/">
+            <Button size="lg" variant="outline" className="px-8">
+              Go to Home
+            </Button>
+          </Link>
+        </motion.div>
+      </motion.div>
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    return (
-        <div className="pb-20 px-4" >
-            <div className="container mx-auto text-center ">
-                <h1 className="text-5xl md:text-8xl lg:text-[105px] gradient-text">
-                    Manage Your Finances <br /> with ExpensfiyX
-                </h1>
-                <p className=" text-sm md:text-xl text-gray-500 mb-8 pt-4 max-w-2xl mx-auto ">
-                    An Ai-powered financial management platfrom that helps you track,
-                    analyze, and optimize your spending with real-time insights.
-                </p>
-                <div className="flex justify-center space-x-4 ">
-                    <Link href={"/dashboard"} >
-                        <Button size={"lg"} className="px-8 cursor-pointer " >
-                            Get started
-                        </Button>
-                    </Link>
-                    <Link href={"/"} >
-                        <Button size={"lg"} variant={'outline'} className="px-8  cursor-pointer " >
-                            Home Page
-                        </Button>
-                    </Link>
-                </div>
-                <div className="hero-image-wrapper">
-                    <div
-                        className="hero-image"
-                        ref={imageRef}
-                    >
-                        <Image
-                            src={"/bannerf.png"}
-                            alt="banner"
-                            width={1280}
-                            height={720}
-                            className="mx-auto rounded-lg shadow-2xl border "
-                        />
-                    </div>
-                </div>
-            </div>
-
+      {/* Image */}
+      <motion.div
+        style={{
+          rotateX: imageRotateX,
+          y: imageTranslateY,
+          scale: imageScale,
+        }}
+        className="w-full max-w-6xl rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white mt-12"
+      >
+        <div className="bg-gray-900 p-2 rounded-[24px]">
+          <div className="bg-neutral-100 rounded-[16px] overflow-hidden">
+            <Image
+              src="/bannerf.png"
+              alt="Dashboard Preview"
+              width={1920}
+              height={1080}
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
-    )
+      </motion.div>
+    </section>
+  )
 }
 
 export default HeroSection

@@ -121,6 +121,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -137,49 +138,43 @@
   }
 
 } */
-
-@layer utilities{
-  .gradient{
-    background-image: linear-gradient(to bottom right, #2563eb, #8b5cf6); /* from-blue-600 to-purple-600 */
+@layer utilities {
+  .gradient {
+    background-image: linear-gradient(to bottom right, #2563eb, #8b5cf6);
   }
 
   .gradient-text {
-  background-image: linear-gradient(135deg, #2563eb, #8b5cf6); /* smoother angle */
-  font-weight: 800;             /* still bold, but not overkill */
-  letter-spacing: -0.01em;      /* slight negative tracking */
-  padding-right: 0.5rem;        /* pr-2 */
-  padding-bottom: 0.5rem;       /* pb-2 */
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(135deg, #2563eb, #4f46e5, #8b5cf6, #ec4899, #f59e0b);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .animate-gradient {
+    background-size: 300% 300%;
+    animation: gradientFlow 6s ease-in-out infinite;
+  }
+
+  @keyframes gradientFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 50% 100%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 50% 0%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 }
-
-
-}
-
-.hero-image-wrapper {
-  perspective: 1000px;
-  overflow: hidden;
-}
-
-.hero-image {
-  transform: rotateX(15deg) scale(1);
-  opacity: 0.7;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
-  will-change: transform, opacity;
-}
-
-.hero-image.scrolled {
-  transform: rotateX(0deg) translateY(40px) scale(1);
-  opacity: 1;
-}
-
-
-
-
-.animate-gradient{
-  background-size: 200% 200%;
-  animation: gradientMove 3s ease infinite
-}
-
