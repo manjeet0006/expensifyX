@@ -7,6 +7,7 @@ import ExcelJS from 'exceljs';
 import PDFDocument from 'pdfkit-table';
 import { db } from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
+import { getCurrentUser } from './helper';
 
 
 const FORMATS = {
@@ -68,16 +69,8 @@ export const generatePdfTable = async (doc, transactions) => {
  */
 export async function downloadTransactions(accountId, format, startDate, endDate) {
 
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized")
+    const user = await getCurrentUser();
 
-    const user = await db.user.findUnique({
-        where: { clerkUserId: userId }
-    })
-
-    if (!user) {
-        throw new Error("User not Found")
-    }
 
     const start = new Date(startDate);
     const end = new Date(endDate);

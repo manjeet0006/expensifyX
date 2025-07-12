@@ -2,7 +2,7 @@ import { getDashboardData, getUserAccounts } from '@/actions/dashboard'
 import CreateAccountDrawer from '@/components/create-account-drawer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus } from 'lucide-react'
-import React, { Suspense } from 'react'
+import React  from 'react'
 import AccountCard from './_components/account-card'
 import { getCurrentBudget } from '@/actions/budget'
 import BudgetProgress from './_components/budget-progress'
@@ -41,12 +41,11 @@ async function DashboardPage() {
 
 
       {/* Overiew */}
-      <Suspense fallback={"Loading Overview..."} >
+
         <DashboardOveriew
           accounts={accounts}
           transactions={transactions || []}
         />
-      </Suspense>
 
 
 

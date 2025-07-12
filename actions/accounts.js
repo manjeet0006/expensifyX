@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "./helper";
 
 const serializeTransaction = (obj) => {
     const serialized = { ...obj };
@@ -24,20 +25,8 @@ export async function updateDefaultAccount(accountId) {
 
 
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized")
+            const user = await getCurrentUser()
 
-
-        const user = await db.user.findUnique({
-            where: {
-                clerkUserId: userId
-            }
-        })
-
-
-        if (!user) {
-            throw new Error("User not Found")
-        }
 
 
         const data = await db.account.updateMany({
@@ -68,20 +57,7 @@ export async function updateDefaultAccount(accountId) {
 
 
 export async function getAccountWithTransactions(accountId) {
-    const { userId } = await auth()
-    if (!userId) throw new Error("Unauthorized")
-
-
-    const user = await db.user.findUnique({
-        where: {
-            clerkUserId: userId
-        }
-    })
-
-
-    if (!user) {
-        throw new Error("User not Found")
-    }
+    const user = await getCurrentUser()
 
     const account = await db.account.findUnique({
         where: { id: accountId, userId: user.id },

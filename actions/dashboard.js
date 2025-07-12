@@ -2,6 +2,7 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "./helper";
 
 
 
@@ -22,16 +23,8 @@ const serializeTransaction = (obj) => {
 export async function createAccount(data) {
 
     try {
-        const { userId } = await auth();
-        if (!userId) throw new Error("Unauthorized")
+        const user = await getCurrentUser();
 
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId }
-        })
-
-        if (!user) {
-            throw new Error("User not Found")
-        }
 
         // Convert balance to float before saving
         const balanceFloat = parseFloat(data.balance)
@@ -94,16 +87,8 @@ export async function createAccount(data) {
 
 
 export async function getUserAccounts() {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized")
+   const user = await getCurrentUser();
 
-    const user = await db.user.findUnique({
-        where: { clerkUserId: userId }
-    })
-
-    if (!user) {
-        throw new Error("User not Found")
-    }
 
     const accounts = await db.account.findMany({
         where: {
@@ -135,16 +120,8 @@ export async function getUserAccounts() {
 
 export async function getDashboardData() {
 
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized")
+    const user = await getCurrentUser();
 
-    const user = await db.user.findUnique({
-        where: { clerkUserId: userId }
-    })
-
-    if (!user) {
-        throw new Error("User not Found")
-    }
 
     const transactions = await db.transaction.findMany({
         where: { userId: user.id },

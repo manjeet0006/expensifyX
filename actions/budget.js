@@ -3,17 +3,12 @@
 import { db } from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
+import { getCurrentUser } from "./helper";
 
 export async function getCurrentBudget() {
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized")
+        const user = await getCurrentUser();
 
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId }
-        })
-
-        if (!user) throw new Error("user not found")
 
         const budget = await db.budget.findFirst({
             where: {
@@ -67,14 +62,8 @@ export async function getCurrentBudget() {
 
 export async function updateBudget(amount) {
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized")
+        const user = await getCurrentUser();
 
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId }
-        })
-
-        if (!user) throw new Error("user not found")
 
         const budgest = await db.budget.upsert({
             where: {

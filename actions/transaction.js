@@ -5,23 +5,21 @@ import { request } from "@arcjet/next";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "./helper";
 
 
 const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 
-const serializeAmount = (obj) => {
-    const serialized = { ...obj };
-
-    if (obj.balance) {
-        serialized.balance = obj.balance.toNumber()
-    }
-
-    if (obj.amount) {
-        serialized.amount = obj.amount.toNumber()
-    }
-    return serialized
+function serializeAmount(obj) {
+  return {
+    ...obj,
+    ...(obj.balance && { balance: Number(obj.balance) }),
+    ...(obj.amount && { amount: Number(obj.amount) }),
+  };
 }
+
+
 export async function createTransaction(data) {
     try {
         const { userId } = await auth()
@@ -222,14 +220,8 @@ export async function scanReceipt(file) {
 
 export async function getTransaction(id) {
 
-    const { userId } = await auth()
-    if (!userId) throw new Error("Unauthorized")
+    const user = await getCurrentUser();
 
-    const user = await db.user.findUnique({
-        where: {
-            clerkUserId: userId
-        }
-    })
 
     if (!user) {
         throw new Error("User not Found")
@@ -252,14 +244,8 @@ export async function getTransaction(id) {
 
 export async function updateTransaction(id, data) {
     try {
-        const { userId } = await auth()
-        if (!userId) throw new Error("Unauthorized")
+        const user = await getCurrentUser();
 
-        const user = await db.user.findUnique({
-            where: {
-                clerkUserId: userId
-            }
-        })
 
         if (!user) {
             throw new Error("User not Found")
