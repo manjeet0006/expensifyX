@@ -14,7 +14,6 @@ const AccountPage = async ({ params }) => {
     notFound();
   }
 
-  await new Promise(resolve => setTimeout(resolve, 90000));
 
 
   const { transactions, ...account } = accountData
