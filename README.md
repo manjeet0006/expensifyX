@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ExpensifyX
 
-## Getting Started
+ExpensifyX is a modern personal finance management application designed to help you take control of your finances with ease. Featuring advanced AI-powered analytics, smart receipt scanning, budget planning, and multi-account support, ExpensifyX empowers users to track spending, manage budgets, and gain valuable financial insights in real-time.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Advanced Analytics**: Get detailed insights into your spending patterns with AI-powered analytics.
+- **Smart Receipt Scanner**: Extract data automatically from receipts using advanced AI technology.
+- **Budget Planning**: Create and manage budgets with intelligent recommendations.
+- **Multi-Account Support**: Manage multiple accounts and credit cards in one place.
+- **Multi-Currency**: Support for multiple currencies with real-time conversion.
+- **Automated Insights**: Receive automated financial insights and recommendations.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How It Works
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. **Create Your Account**  
+   Get started in minutes with our simple and secure sign-up process.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Track Your Spending**  
+   Automatically categorize and track your transactions in real-time.
 
-## Learn More
+3. **Get Insights**  
+   Receive AI-powered insights and recommendations to optimize your finances.
 
-To learn more about Next.js, take a look at the following resources:
+## Stats
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 50K+ Active Users
+- $2B+ Transactions Tracked
+- 99.9% Uptime
+- 4.9/5 User Rating
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testimonials
 
-## Deploy on Vercel
+> "ExpensifyX has transformed how I manage my business finances. The AI insights have helped me identify cost-saving opportunities I never knew existed."  
+> — Sarah Johnson, Small Business Owner
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> "The receipt scanning feature saves me hours each month. Now I can focus on my work instead of manual data entry and expense tracking."  
+> — Michael Chen, Freelancer
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> "I recommend ExpensifyX to all my clients. The multi-currency support and detailed analytics make it perfect for international investors."  
+> — Emily Rodriguez, Financial Advisor
+
+## Installation
+
+1. Clone the repository:  
+   ```bash
+   git clone <repository-url>
+   cd expensifyx
+   ```
+
+2. Install dependencies:  
+   ```bash
+   npm install
+   ```
+
+## Usage
+
+- Run the development server:  
+  ```bash
+  npm run dev
+  ```
+
+- Build the project:  
+  ```bash
+  npm run build
+  ```
+
+- Start the production server:  
+  ```bash
+  npm start
+  ```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
+
+## Technologies Used
+
+- Next.js
+- React
+- Prisma (for database management)
+- AI-powered analytics and receipt scanning
+
+## Contributing
+
+Contributions are welcome! Please open issues or submit pull requests for improvements and bug fixes.
+
+## License
+
+This project is licensed under the MIT License.
