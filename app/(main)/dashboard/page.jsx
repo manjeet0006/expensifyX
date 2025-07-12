@@ -1,4 +1,4 @@
-import { getDashboardData, getUserAccounts } from '@/actions/dashboard'
+
 import CreateAccountDrawer from '@/components/create-account-drawer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus } from 'lucide-react'
@@ -7,13 +7,11 @@ import AccountCard from './_components/account-card'
 import { getCurrentBudget } from '@/actions/budget'
 import BudgetProgress from './_components/budget-progress'
 import DashboardOveriew from './_components/transaction-overview'
+import { getDashboardFullData } from '@/actions/dashboard'
 
 async function DashboardPage() {
 
-  const accounts = await getUserAccounts()
-
-
-  const transactions = await getDashboardData()
+  const { accounts, transactions } = await getDashboardFullData();
 
 
 

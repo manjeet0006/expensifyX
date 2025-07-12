@@ -1,5 +1,5 @@
 
-import { getUserAccounts } from '@/actions/dashboard'
+import { getDashboardFullData } from '@/actions/dashboard'
 import { defaultCategories } from '@/data/catogories'
 import React, { Suspense } from 'react'
 import AddTransactionForm from '../_components/transaction-form'
@@ -10,7 +10,7 @@ import { BarLoader } from 'react-spinners'
 const AddTransactionPage = async ({ searchParams }) => {
   const params = await searchParams;
 
-  const accounts = await getUserAccounts()
+  const accounts = await getDashboardFullData()
 
 
   const editId = params?.edit
@@ -30,7 +30,7 @@ const AddTransactionPage = async ({ searchParams }) => {
       <Suspense fallback={<BarLoader className='mt-4 ' width={"100%"} color='#9333ea' />} >
 
         <AddTransactionForm
-          accounts={accounts}
+          accounts={accounts.accounts}
           category={defaultCategories}
           editMode={!!editId}
           initialData={initialData}

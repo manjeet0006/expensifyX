@@ -31,6 +31,9 @@ const AddTransactionForm = ({
 
   const editId = searchParams.get("edit")
 
+  console.log("accounts received in AddTransactionForm:", accounts)
+
+
   const {
     register,
     handleSubmit,

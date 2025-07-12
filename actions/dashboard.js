@@ -86,48 +86,70 @@ export async function createAccount(data) {
 }
 
 
-export async function getUserAccounts() {
-   const user = await getCurrentUser();
+// export async function getUserAccounts() {
+//    const user = await getCurrentUser();
+
+//     const accounts = await db.account.findMany({
+//         where: {
+//             userId: user.id
+//         },
+//         orderBy: { createdAt: "desc" },
+//         include: {
+//             _count: {
+//                 select: {
+//                     transactions: true,
+//                 }
+//             }
+//         }
+//     })
+
+//     const serializedAccount = accounts.map(serializeTransaction)
+
+//     return serializedAccount
+
+// }
 
 
-    const accounts = await db.account.findMany({
-        where: {
-            userId: user.id
-        },
-        orderBy: { createdAt: "desc" },
-        include: {
-            _count: {
-                select: {
-                    transactions: true,
-                }
-            }
-        }
+
+
+// export async function getDashboardData() {
+
+//     const user = await getCurrentUser();
+
+
+//     const transactions = await db.transaction.findMany({
+//         where: { userId: user.id },
+//         orderBy: { date: "desc" },
+//     });
+
+//     return transactions.map(serializeTransaction);
+// }
+
+
+
+
+
+export async function getDashboardFullData() {
+  const user = await getCurrentUser();
+
+  const [accounts, transactions] = await Promise.all([
+    db.account.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: { select: { transactions: true } }
+      }
+    }),
+    db.transaction.findMany({
+      where: { userId: user.id },
+      orderBy: { date: "desc" },
+      take: 10 
     })
+  ]);
 
-
-
-    const serializedAccount = accounts.map(serializeTransaction)
-
-
-    return serializedAccount
-
-
-
-}
-
-
-
-
-export async function getDashboardData() {
-
-    const user = await getCurrentUser();
-
-
-    const transactions = await db.transaction.findMany({
-        where: { userId: user.id },
-        orderBy: { date: "desc" },
-    });
-
-    return transactions.map(serializeTransaction);
+  return {
+    accounts: accounts.map(serializeTransaction),
+    transactions: transactions.map(serializeTransaction)
+  }
 }
 
