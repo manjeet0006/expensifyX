@@ -13,7 +13,7 @@ const Header = async () => {
 
     return (
         <div className="fixed top-0 w-full bg-white/40 backdrop-blur-md z-50 border-b ">
-            <nav className='w-full py-2 flex items-center justify-between px-5 md:px-20'>
+            <nav className='w-full py-3 flex items-center justify-between  px-5 md:px-20'>
                 <Link href="/">
                     <Image
                         src="/logof.png"
@@ -21,7 +21,7 @@ const Header = async () => {
                         width={0}
                         height={0}
                         sizes="100vw"
-                        className="h-8 md:h-10 w-auto object-contain"
+                        className="h-10 md:h-12 w-auto object-contain"
                     />
                 </Link>
 
