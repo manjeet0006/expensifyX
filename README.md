@@ -81,7 +81,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ## Contributing
 
-Contributions are welcome! Please open issues or submit pull requests for improvements and bug fixes.
+Contributions are welcome! Please open issues or submit pull requests for improvements and bug fixes. All are welcome
 
 ## License
 
